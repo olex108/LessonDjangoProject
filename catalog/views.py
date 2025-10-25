@@ -1,8 +1,8 @@
+from django.http import Http404, HttpResponse
 from django.shortcuts import render
-from django.http import HttpResponse, Http404
 
 
-def home(request):
+def home(request) -> HttpResponse:
     """Function to render the home page with GET request"""
 
     if request.method == "GET":
@@ -14,7 +14,7 @@ def home(request):
         raise Http404
 
 
-def contacts(request):
+def contacts(request) -> HttpResponse:
     """Function to render contact page wits GET and POST requests"""
 
     if request.method == "POST":
