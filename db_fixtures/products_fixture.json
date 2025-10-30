@@ -1,0 +1,41 @@
+[
+{
+    "model": "catalog.product",
+    "pk": 2,
+    "fields": {
+        "name": "Samsung Galaxy A56",
+        "description": "Samsung Galaxy A56 – это новый смартфон 2025 года с мощным процессором Exynos 1580",
+        "image": "",
+        "category": 1,
+        "price": 27390.0,
+        "created_at": "2025-10-25T21:17:42.542Z",
+        "updated_at": "2025-10-25T21:17:42.542Z"
+    }
+},
+{
+    "model": "catalog.product",
+    "pk": 3,
+    "fields": {
+        "name": "Samsung Galaxy Watch8",
+        "description": "Смарт-часы Samsung Galaxy Watch 8 44mm — это именно то, что вам нужно!",
+        "image": "",
+        "category": 2,
+        "price": 20990.0,
+        "created_at": "2025-10-25T21:17:42.543Z",
+        "updated_at": "2025-10-25T21:17:42.543Z"
+    }
+},
+{
+    "model": "catalog.product",
+    "pk": 4,
+    "fields": {
+        "name": "Samsung Galaxy Watch8 Classic",
+        "description": "Умные часы Samsung Galaxy Watch8 Classic 46mm — это не просто аксессуар, а мощный инструмент",
+        "image": "",
+        "category": 2,
+        "price": 25990.0,
+        "created_at": "2025-10-25T21:17:42.543Z",
+        "updated_at": "2025-10-25T21:17:42.543Z"
+    }
+}
+]
