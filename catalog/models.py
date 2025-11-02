@@ -22,7 +22,16 @@ class Category(models.Model):
 
 class Product(models.Model):
     """
-    Model representing a product
+    Model representing a product with fields
+
+    id: pk of product
+    name: name
+    description: details about product
+    image: path to image file
+    category: ForeignKey of Category
+    price: price
+    created_at: date time info about creation of product
+    updated_at: lust update of product
     """
 
     name = models.CharField(max_length=100, verbose_name="Продукт")
