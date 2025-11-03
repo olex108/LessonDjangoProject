@@ -1,17 +1,14 @@
-<!-- home.html -->
+<!-- products_list.html -->
 {% extends 'catalog/base.html' %}
 
-{% load my_tags %}
-
-{% block title %}Home{% endblock %}
+{% block title %}Products_list{% endblock %}
 
 {% block page_name %}
-    <h1>Главная</h1>
+    <h1>Товары</h1>
 {% endblock %}
 
 {% block content %}
     {% for product in products %}
-
       <div class="col-lg-4">
           {% if product.image %}
               <img class="bd-placeholder-img rounded-circle" width="140" height="140" src="{{ product.image.url }}"/>
@@ -24,5 +21,4 @@
       </div><!-- /.col-lg-4 -->
 
     {% endfor %}
-    {% include 'catalog/includes/featurettes.html' %}
 {% endblock %}
