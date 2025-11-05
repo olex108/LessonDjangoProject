@@ -3,14 +3,20 @@ from django.shortcuts import render, get_object_or_404
 
 from catalog.models import Product, Category, Contacts, ClientMessage
 
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-def home(request, page: int) -> HttpResponse:
+
+def home(request) -> HttpResponse:
     """Function to render the home page with GET request"""
 
-    print(type(page))
     products = Product.objects.all()
+
+    products_paginator = Paginator(products, 3)
+    page_number = request.GET.get("page")
+    page_obj = products_paginator.get_page(page_number)
+
     context = {
-        "products": products[:3],
+        "page_obj": page_obj,
     }
 
     return render(request, "catalog/home.html", context)
