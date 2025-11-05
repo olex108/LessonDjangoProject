@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-    {% for product in products %}
+    {% for product in page_obj %}
 
       <div class="col-lg-4">
           {% if product.image %}
@@ -24,5 +24,41 @@
       </div><!-- /.col-lg-4 -->
 
     {% endfor %}
+
+    <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-center">
+          {% if page_obj.has_previous %}
+                <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" tabindex="-1" aria-disabled="true">Previous</a>
+                </li>
+          {% else %}
+                <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                </li>
+          {% endif %}
+
+          {% if page_obj.has_previous %}
+                <li class="page-item "><a class="page-link" href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a></li>
+                <li class="page-item disabled"><a class="page-link" href="?page={{ page_obj.number }}">{{ page_obj.number }}</a></li>
+                {% if page_obj.has_next %}
+                    <li class="page-item "><a class="page-link" href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a></li>
+                {% endif %}
+          {% else %}
+                <li class="page-item disabled"><a class="page-link" href="?page=">{{ page_obj.number }}</a></li>
+                <li class="page-item "><a class="page-link" href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a></li>
+                <li class="page-item"><a class="page-link" href="?page=3">3</a></li>
+          {% endif %}
+
+          {% if page_obj.has_next %}
+            <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}" tabindex="-1" aria-disabled="true">Next</a>
+          {% else %}
+            <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Next</a>
+          {% endif %}
+        </li>
+      </ul>
+    </nav>
+
     {% include 'catalog/includes/featurettes.html' %}
 {% endblock %}
