@@ -74,12 +74,16 @@ class Contacts(models.Model):
 
 
 class ClientMessage(models.Model):
+    """
+    Model representing a message of client, for save contacts of client, save message and field is_answered to keep
+    information about answer
+    """
 
     name = models.CharField(max_length=100, verbose_name="Имя")
     phone = models.CharField(max_length=12, verbose_name="Телефон")
     message = models.TextField(verbose_name="Сообщение")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Отправлено")
-    is_answered = models.BooleanField(default=False, verbose_name="Отвечено")
+    is_answered = models.BooleanField(default=False, verbose_name="Рассмотрено")
 
     def __str__(self) -> str:
         return f"{self.name} - {self.phone}"
