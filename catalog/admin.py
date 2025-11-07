@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Category, Product, Contacts, ClientMessage
+from .models import Category, ClientMessage, Contacts, Product
 
 
 @admin.register(Category)
