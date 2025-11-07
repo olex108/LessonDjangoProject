@@ -29,17 +29,30 @@ PORT=port
 
 ## Description of Functionality
 
-### functions in view.py of catalop app
+### CBV in view.py of catalog app
 
-- `home` Function to render the home page with GET request
+- `HomeView` CBV for render home page with pagination of products
 
-- `products_list` Function to render all products list from database with GET request
+- `ProductsListView` CBV for render all products list from database with GET request
 
-- `product_info` Function to render all info of product by product_id with GET request
+- `ProductDetailView` CBV for render product detail page with GET request
 
-- `categories` Function to render all categories of products from database with GET request
+- `CategoriesListView` CBV for render all categories list from database with GET request
 
-- `contacts` Function to render contact page wits GET and POST requests
+- `ContactsView` Class to render contact information about company and form to fill user contacts and message
+
+### CBV in view.py of blog app
+
+- `PostsListView` CBV for render posts list view
+
+- `PostDetailView` CBV for render post detail view
+
+- `PostCreateView` CBV for create post view
+
+- `PostUpdateView` CBV for update post view
+
+- `PostDeleteView` CBV for delete post view
+
 
 
 ## Description models of DB
@@ -63,4 +76,39 @@ PORT=port
     price: price
     created_at: date time info about creation of product
     updated_at: lust update of product
+```
+
+- `Contacts` Model representing a contacts of company with fields
+
+```    
+    id: pk of contact
+    name: name
+    email: email
+    phone: phone number
+```
+
+- `ClientMessage` Model representing a message of client, for save contacts of client, save message and field is_answered to keep
+
+
+```    
+    id: pk of contact
+    name: name
+    phone: phone
+    message: message
+    created_at: date time info about creation of message
+    is_answered: information about answer
+```
+
+- `Post` Model representing a blog post, for save contacts of client, save message and field is_answered to keep
+
+
+
+```    
+    id: pk of contact
+    title: post title
+    content: text of post
+    image: path to image file 
+    created_at: date time info about creation of message
+    is_published: information about ready for publication
+    views_counter: count of views
 ```
