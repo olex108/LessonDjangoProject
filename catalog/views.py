@@ -65,7 +65,7 @@ class ContactsView(CreateView):
         """Add Contacts to context data"""
 
         try:
-            contacts = Contacts.objects.get(id=1)
+            contacts = Contacts.objects.get()
         except ObjectDoesNotExist:
             return super().get_context_data(**kwargs)
 
