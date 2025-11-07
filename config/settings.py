@@ -34,7 +34,8 @@ INSTALLED_APPS = [
 
     "widget_tweaks",
 
-    "catalog"
+    "catalog",
+    "blog"
 ]
 
 MIDDLEWARE = [
