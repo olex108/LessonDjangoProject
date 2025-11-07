@@ -1,0 +1,50 @@
+<!-- contacts.html -->
+{% extends 'blog/base.html' %}
+
+{% load widget_tweaks %}
+
+{% block title %}post_form{% endblock %}
+
+{% block page_name %}
+    {% if object %}
+        <h1>{{ object.title }}</h1>
+    {% else %}
+        <h1>Новая статья</h1>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row text-start">
+
+        <div class="col ">
+            <div class="card mb-4 box-shadow">
+                <div class="card-body">
+                    <form id="myForm" method="post" action="" class="form-floating">
+                      {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="{{ form.title.id_for_label }}">{{ form.title.label }}:</label>
+                            {{ form.title|add_class:"form-control" }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ form.phone.id_for_label }}">{{ form.content.label }}:</label>
+                            {{ form.content|add_class:"form-control" }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ form.message.id_for_label }}">{{ form.image.label }}:</label>
+                            {{ form.image|add_class:"form-control" }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ form.is_published.id_for_label }}">{{ form.is_published.label }}:</label>
+                            {{ form.is_published }}
+                        </div>
+                        <button type="submit" class="btn btn-lg btn-block btn-outline-primary">Сохранить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
