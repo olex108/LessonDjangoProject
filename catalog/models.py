@@ -92,5 +92,3 @@ class ClientMessage(models.Model):
         verbose_name = "Сообщение"
         verbose_name_plural = "Сообщения"
         ordering = ["created_at"]
-
-
