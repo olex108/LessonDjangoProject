@@ -28,8 +28,8 @@
 
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="btn-group">
-                        <a type="button" class="btn btn-sm btn-outline-secondary" href="{% url 'blog:post_update' post.id %}">Редактировать</a>
-                        <a type="button" class="btn btn-sm btn-outline-danger" href="{% url 'blog:post_delete' post.id %}">Удалить</a>
+                        <a type="button" class="p-2 btn btn-sm btn-secondary" href="{% url 'blog:post_update' post.id %}">Редактировать</a>
+                        <a type="button" class="p-2 btn btn-sm btn-outline-danger" href="{% url 'blog:post_delete' post.id %}">Удалить</a>
                     </div>
                     <small class="text-muted">Просмотров: {{ post.views_counter }}</small>
                 </div>

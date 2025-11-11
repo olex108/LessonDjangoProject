@@ -89,7 +89,6 @@ PORT=port
 
 - `ClientMessage` Model representing a message of client, for save contacts of client, save message and field is_answered to keep
 
-
 ```    
     id: pk of contact
     name: name
@@ -100,8 +99,6 @@ PORT=port
 ```
 
 - `Post` Model representing a blog post, for save contacts of client, save message and field is_answered to keep
-
-
 
 ```    
     id: pk of contact

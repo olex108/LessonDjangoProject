@@ -1,4 +1,4 @@
-<!-- product_detail.html -->
+<!-- product_confirm_delete.html -->
 {% extends 'catalog/base.html' %}
 
 {% block title %}Home{% endblock %}
@@ -16,11 +16,10 @@
             <div class="card mb-4 box-shadow">
                 <div class="card-body">
                     <form id="myForm" method="post" action="" class="form-floating">
-                      {% csrf_token %}
-                        <h1>Вы действительно хотите удалить пост "{{object.title}}"?</h1>
+                        {% csrf_token %}
+                        <h1>Вы действительно хотите удалить товар "{{object.name}}" ?</h1>
                         <div class="btn-group mt-4">
-
-                            <a type="button" class="p-2 bd-highlight btn btn-sm btn-primary" href="{% url 'blog:post_detail' post.id %}">Отменить</a>
+                            <a type="button" class="p-2 bd-highlight btn btn-sm btn-primary" href="{% url 'catalog:product_detail' product.id %}">Отменить</a>
                             <button type="submit" class="p-2 bd-highlight btn btn-sm btn-danger">Удалить</button>
                         </div>
                     </form>
