@@ -4,9 +4,11 @@ from django.http import JsonResponse
 
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, ListView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from catalog.models import Category, ClientMessage, Contacts, Product
+
+from .forms import ProductForm
 
 
 class HomeView(ListView):
@@ -38,6 +40,38 @@ class ProductDetailView(DetailView):
     model = Product
     template_name = "catalog/product_detail.html"
     context_object_name = "product"
+
+
+class ProductCreateView(CreateView):
+    """CBV for create product page with GET request"""
+
+    model = Product
+    form_class = ProductForm
+    template_name = "catalog/product_form.html"
+
+    def get_success_url(self):
+        # Используем reverse_lazy, чтобы получить URL с подставленным id
+        return reverse_lazy("catalog:product_detail", kwargs={"pk": self.object.pk})
+
+
+class ProductUpdateView(UpdateView):
+    """CBV for update product page with GET request"""
+
+    model = Product
+    form_class = ProductForm
+    template_name = "catalog/product_form.html"
+
+    def get_success_url(self):
+        # Используем reverse_lazy, чтобы получить URL с подставленным id
+        return reverse_lazy("catalog:product_detail", kwargs={"pk": self.object.pk})
+
+
+class ProductDeleteView(DeleteView):
+    """CBV for delete product page with GET request"""
+
+    model = Product
+    template_name = "catalog/product_confirm_delete.html"
+    success_url = reverse_lazy("catalog:products_list")
 
 
 class CategoriesListView(ListView):
