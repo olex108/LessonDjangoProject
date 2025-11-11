@@ -2,6 +2,7 @@ from django.urls import reverse_lazy
 from django.views.generic import DetailView, ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from .models import Post
+from .forms import PostForm
 
 
 class PostsListView(ListView):
@@ -34,8 +35,8 @@ class PostCreateView(CreateView):
     """CBV for create post view"""
 
     model = Post
+    form_class = PostForm
     template_name = "blog/post_form.html"
-    fields = ["title", "content", "image", "is_published"]
 
     def get_success_url(self):
         # Используем reverse_lazy, чтобы получить URL с подставленным id
@@ -46,8 +47,8 @@ class PostUpdateView(UpdateView):
     """CBV for update post view"""
 
     model = Post
+    form_class = PostForm
     template_name = "blog/post_form.html"
-    fields = ["title", "content", "image", "is_published"]
 
     def get_success_url(self):
         # Используем reverse_lazy, чтобы получить URL с подставленным id
