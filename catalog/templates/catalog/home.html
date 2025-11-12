@@ -20,9 +20,14 @@
           {% endif %}
         <h2>{{ product.name }}</h2>
         <p>{{ product.description|truncatechars:100 }}</p>
-        <p><a class="btn btn-secondary" href="{% url 'catalog:product_info' product.id %}">Подробнее &raquo;</a></p>
+        <p><a class="btn btn-secondary" href="{% url 'catalog:product_detail' product.id %}">Подробнее &raquo;</a></p>
       </div><!-- /.col-lg-4 -->
 
     {% endfor %}
+
+    {% if is_paginated %}
+        {% include 'catalog/includes/paginator.html' %}
+    {% endif %}
+
     {% include 'catalog/includes/featurettes.html' %}
 {% endblock %}

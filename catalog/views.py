@@ -1,74 +1,120 @@
-from django.http import Http404, HttpResponse
-from django.shortcuts import render, get_object_or_404
+from django.core.exceptions import ObjectDoesNotExist
 
-from catalog.models import Product, Category
+from django.http import JsonResponse
 
+from django.urls import reverse_lazy
+from django.views.generic import DetailView, ListView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
-def home(request) -> HttpResponse:
-    """Function to render the home page with GET request"""
+from catalog.models import Category, ClientMessage, Contacts, Product
 
-    products = Product.objects.all()
-    context = {
-        "products": products[:3],
-    }
-
-    return render(request, "catalog/home.html", context)
+from .forms import ProductForm
 
 
-def products_list(request) -> HttpResponse:
-    """Function to render all products list from database with GET request"""
+class HomeView(ListView):
+    """CBV for render home page with pagination of products"""
 
-    products = Product.objects.all()
-    context = {
-        "products": products,
-    }
+    model = Product
+    template_name = "catalog/home.html"
+    context_object_name = "products"
+    paginate_by = 6
 
-    return render(request, "catalog/products_list.html", context)
+    def get_queryset(self):
+        return Product.objects.all().order_by("-created_at")
 
 
-def product_info(request, product_id: str) -> HttpResponse:
+class ProductsListView(ListView):
+    """CBV for render all products list from database with GET request"""
+
+    model = Product
+    template_name = "catalog/products_list.html"
+    context_object_name = "products"
+
+    def get_queryset(self):
+        return Product.objects.all().order_by("-created_at")
+
+
+class ProductDetailView(DetailView):
+    """CBV for render product detail page with GET request"""
+
+    model = Product
+    template_name = "catalog/product_detail.html"
+    context_object_name = "product"
+
+
+class ProductCreateView(CreateView):
+    """CBV for create product page with GET request"""
+
+    model = Product
+    form_class = ProductForm
+    template_name = "catalog/product_form.html"
+
+    def get_success_url(self):
+        # Используем reverse_lazy, чтобы получить URL с подставленным id
+        return reverse_lazy("catalog:product_detail", kwargs={"pk": self.object.pk})
+
+
+class ProductUpdateView(UpdateView):
+    """CBV for update product page with GET request"""
+
+    model = Product
+    form_class = ProductForm
+    template_name = "catalog/product_form.html"
+
+    def get_success_url(self):
+        # Используем reverse_lazy, чтобы получить URL с подставленным id
+        return reverse_lazy("catalog:product_detail", kwargs={"pk": self.object.pk})
+
+
+class ProductDeleteView(DeleteView):
+    """CBV for delete product page with GET request"""
+
+    model = Product
+    template_name = "catalog/product_confirm_delete.html"
+    success_url = reverse_lazy("catalog:products_list")
+
+
+class CategoriesListView(ListView):
+    """CBV for render all categories list from database with GET request"""
+
+    model = Category
+    template_name = "catalog/categories_list.html"
+    context_object_name = "categories"
+
+
+class ContactsView(CreateView):
     """
-    Function to render all info of product by product_id with GET request
+    Class to render contact information about company and form to fill user contacts and message
+    Class use model ClientMessage to create form, and use method get_context_data() to add information about company
 
-    product_id: Product ID
+    Class use form_valid to create JSON request about success feel of form and save in database
     """
 
-    product = get_object_or_404(Product, id=product_id)
+    model = ClientMessage
+    fields = ["name", "phone", "message"]
+    template_name = "catalog/contacts_form.html"
+    success_url = reverse_lazy("catalog:contacts")
 
-    context = {
-        "product": product,
-    }
-    return render(request, "catalog/product_info.html", context)
+    def get_context_data(self, **kwargs):
+        """Add Contacts to context data"""
 
+        try:
+            contacts = Contacts.objects.get()
+        except ObjectDoesNotExist:
+            return super().get_context_data(**kwargs)
 
-def categories(request) -> HttpResponse:
-    """Function to render all categories of products from database with GET request"""
+        context = super().get_context_data(**kwargs)
+        context["contacts"] = contacts
 
-    categories = Category.objects.all()
+        return context
 
-    context = {
-        "categories": categories,
-    }
-    return render(request, "catalog/categories.html", context)
+    def form_valid(self, form):
+        """Validate form, save in database and return JSON response by get AJAX-requested"""
 
+        self.object = form.save()
 
-def contacts(request) -> HttpResponse:
-    """Function to render contact page wits GET and POST requests"""
-
-    print(type(request))
-
-    if request.method == "POST":
-
-        name = request.POST["name"]
-        phone = request.POST["phone"]
-        message = request.POST["message"]
-
-        return HttpResponse(f"Приветствую, {name}! Ваши данные успешно отправлены")
-
-    elif request.method == "GET":
-
-        return render(request, "catalog/contacts.html")
-
-    else:
-
-        raise Http404
+        if self.request.headers.get("x-requested-with") == "XMLHttpRequest":
+            # return JSON response by get AJAX-requested
+            return JsonResponse({"success": True})
+        else:
+            return super().form_valid(form)

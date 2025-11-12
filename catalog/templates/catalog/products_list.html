@@ -8,6 +8,7 @@
 {% endblock %}
 
 {% block content %}
+    {% include 'catalog/includes/filter_panel.html' %}
     {% for product in products %}
       <div class="col-lg-4">
           {% if product.image %}
@@ -17,8 +18,9 @@
           {% endif %}
         <h2>{{ product.name }}</h2>
         <p>{{ product.description|truncatechars:100 }}</p>
-        <p><a class="btn btn-secondary" href="{% url 'catalog:product_info' product.id %}">Подробнее &raquo;</a></p>
+        <p><a class="btn btn-secondary" href="{% url 'catalog:product_detail' product.id %}">Подробнее &raquo;</a></p>
       </div><!-- /.col-lg-4 -->
+
 
     {% endfor %}
 {% endblock %}

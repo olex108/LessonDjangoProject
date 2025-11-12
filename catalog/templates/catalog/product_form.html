@@ -1,0 +1,42 @@
+<!-- contacts.html -->
+{% extends 'catalog/base.html' %}
+
+{% load widget_tweaks %}
+
+{% block title %}Product form{% endblock %}
+
+{% block page_name %}
+    {% if object %}
+        <h1>{{ object.name }}</h1>
+    {% else %}
+        <h1>Новый товар</h1>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="card mb-4 box-shadow">
+        <div class="card-header">
+            <h4 class="my-0 font-weight-normal">Форма товара</h4>
+        </div>
+        <div class="card-body">
+            <form id="myForm" method="post" action="" class="form-floating" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="btn-group mt-4">
+                    <button type="submit" class="p-2 bd-highlight btn btn-sm btn-primary">Сохранить</button>
+                    {% if object %}
+                        <a type="button" class="p-2 bd-highlight btn btn-sm btn-outline-secondary" href="{% url 'catalog:product_detail' object.pk %}">Отменить</a>
+                    {% else %}
+                        <a type="button" class="p-2 bd-highlight btn btn-sm btn-outline-secondary" href="{% url 'catalog:products_list' %}">Отменить</a>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% include 'catalog/includes/featurettes.html' %}
+{% endblock %}

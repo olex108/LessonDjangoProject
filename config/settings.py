@@ -32,7 +32,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
-    "catalog"
+    "widget_tweaks",
+
+    "catalog",
+    "blog"
 ]
 
 MIDDLEWARE = [
