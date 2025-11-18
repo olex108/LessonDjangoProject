@@ -1,0 +1,75 @@
+<!-- product_detail.html -->
+{% extends 'catalog/base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block page_name %}
+    <h1>{{ product.name }}</h1>
+{% endblock %}
+
+{% block content %}
+
+  <div class="col-8">
+    <ol class="list-group list-group-numbered">
+      <li class="list-group-item d-flex justify-content-between align-items-start">
+        <div class="ms-2 me-auto">
+          <div class="fw-bold">Название</div>
+          {{ product.name }}
+        </div>
+        <span class="badge bg-primary rounded-pill">ТОП</span>
+      </li>
+      <li class="list-group-item d-flex justify-content-between align-items-start">
+        <div class="ms-2 me-auto">
+          <div class="fw-bold">Описание</div>
+          {{ product.description }}
+        </div>
+      </li>
+      <li class="list-group-item d-flex justify-content-between align-items-start">
+        <div class="ms-2 me-auto">
+          <div class="fw-bold">Категория</div>
+          {{ product.category.name }}
+        </div>
+      </li>
+      <li class="list-group-item d-flex justify-content-between align-items-start">
+        <div class="ms-2 me-auto">
+          <div class="fw-bold">Цена</div>
+          {{ product.price }}
+        </div>
+        <span class="badge bg-primary rounded-pill">ТОП</span>
+      </li>
+      <li class="list-group-item d-flex justify-content-between align-items-start">
+        <div class="ms-2 me-auto">
+          <div class="fw-bold">Дата поступления</div>
+          {{ product.created_at|date:"d M Y" }}
+        </div>
+      </li>
+      <li class="list-group-item d-flex justify-content-between align-items-start">
+        <div class="ms-2 me-auto">
+          <div class="fw-bold">Дата изменения</div>
+          {{ product.updated_at|date:"d M Y" }}
+        </div>
+      </li>
+    </ol>
+    <div class="btn-group mt-4">
+        <a type="button" class="p-2 bd-highlight btn btn-sm btn-secondary" href="{% url 'catalog:product_update' product.id %}">Редактировать</a>
+        <a type="button" class="p-2 bd-highlight btn btn-sm btn-outline-danger" href="{% url 'catalog:product_delete' product.id %}">Удалить</a>
+    </div>
+  </div>
+
+  <div class="col-4">
+    {% if product.image %}
+        <img src="{{ product.image.url }}"
+                 alt="{{ product.name }}"
+                 width="500"
+                 height="500"
+                 class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto">
+    {% else %}
+        <img src="/static/images/featurette-divider/img.png"
+             alt="Изображение"
+             width="500"
+             height="500"
+             class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto">
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

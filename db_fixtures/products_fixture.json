@@ -1,0 +1,197 @@
+[
+  {
+    "model": "catalog.product",
+    "pk": 1,
+    "fields": {
+      "name": "Лампа IKEA Tradfri",
+      "description": "Беспроводная умная лампа, позволяющая управлять яркостью и цветом через приложение или голосовые команды.",
+      "image": "",
+      "category": 1,
+      "price": 2499.0,
+      "created_at": "2025-10-25T21:17:42.543Z",
+      "updated_at": "2025-10-25T21:17:42.543Z"
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 2,
+    "fields": {
+      "name": "Philips Hue White and Color",
+      "description": "Умная лампа с возможностью изменения цвета и яркости, управляемая через приложение или голосовыми ассистентами.",
+      "image": "",
+      "category": 1,
+      "price": 4999.0,
+      "created_at": "2025-10-25T21:17:42.543Z",
+      "updated_at": "2025-10-25T21:17:42.543Z"
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 3,
+    "fields": {
+      "name": "Термостат Nest Learning",
+      "description": "Умный термостат, который учится вашим предпочтениям и автоматически регулирует температуру в доме.",
+      "image": "",
+      "category": 2,
+      "price": 29999.0,
+      "created_at": "2025-10-25T21:17:42.543Z",
+      "updated_at": "2025-10-25T21:17:42.543Z"
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 4,
+    "fields": {
+      "name": "Tado Smart AC Control",
+      "description": "Устройство для удаленного управления кондиционером через мобильное приложение.",
+      "image": "",
+      "category": 2,
+      "price": 8999.0,
+      "created_at": "2025-10-25T21:17:42.543Z",
+      "updated_at": "2025-10-25T21:17:42.543Z"
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 5,
+    "fields": {
+      "name": "Arlo Ultra 2",
+      "description": "Высокотехнологичная беспроводная камера с 4K разрешением и функцией ночного видения.",
+      "image": "",
+      "category": 3,
+      "price": 39999.0,
+      "created_at": "2025-10-25T21:17:42.543Z",
+      "updated_at": "2025-10-25T21:17:42.543Z"
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 6,
+    "fields": {
+      "name": "Ring Video Doorbell Pro 2",
+      "description": "Умный видеодомофон с HD-камерой и возможностью двусторонней связи.",
+      "image": "",
+      "category": 3,
+      "price": 15999.0,
+      "created_at": "2025-10-25T21:17:42.543Z",
+      "updated_at": "2025-10-25T21:17:42.543Z"
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 7,
+    "fields": {
+      "name": "Датчик движения Xiaomi Mi Motion Sensor",
+      "description": "Компактный датчик движения для автоматического включения света или систем безопасности.",
+      "image": "",
+      "category": 4,
+      "price": 1299.0,
+      "created_at": "2025-10-25T21:17:42.543Z",
+      "updated_at": "2025-10-25T21:17:42.543Z"
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 8,
+    "fields": {
+      "name": "SensorPush Wireless Sensor",
+      "description": "Датчик температуры и влажности для мониторинга условий дома.",
+      "image": "",
+      "category": 4,
+      "price": 2299.0,
+      "created_at": "2025-10-25T21:17:42.543Z",
+      "updated_at": "2025-10-25T21:17:42.543Z"
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 9,
+    "fields": {
+      "name": "August Wi-Fi Smart Lock",
+      "description": "Электронный замок с управлением через смартфон, обеспечивает высокую безопасность и удобство.",
+      "image": "",
+      "category": 5,
+      "price": 20999.0,
+      "created_at": "2025-10-25T21:17:42.543Z",
+      "updated_at": "2025-10-25T21:17:42.543Z"
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 10,
+    "fields": {
+      "name": "Ring Alarm Security Kit",
+      "description": "Комплект систем безопасности с датчиками, камерой и siren-сигнализацией.",
+      "image": "",
+      "category": 5,
+      "price": 24999.0,
+      "created_at": "2025-10-25T21:17:42.543Z",
+      "updated_at": "2025-10-25T21:17:42.543Z"
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 11,
+    "fields": {
+      "name": "SmartThings Hub",
+      "description": "Центральный контроллер для интеграции различных устройств умного дома.",
+      "image": "",
+      "category": 4,
+      "price": 15999.0,
+      "created_at": "2025-10-25T21:17:42.543Z",
+      "updated_at": "2025-10-25T21:17:42.543Z"
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 12,
+    "fields": {
+      "name": "Xiaomi Mi Motion-Activated Night Light",
+      "description": "Умная ночная подсветка с датчиком движения для освещения проходов и коридоров.",
+      "image": "",
+      "category": 1,
+      "price": 799.0,
+      "created_at": "2025-10-25T21:17:42.543Z",
+      "updated_at": "2025-10-25T21:17:42.543Z"
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 13,
+    "fields": {
+      "name": "SimpliSafe Smart Lock",
+      "description": "Электронный замок с функциями удаленного управления и мониторинга доступа.",
+      "image": "",
+      "category": 5,
+      "price": 14999.0,
+      "created_at": "2025-10-25T21:17:42.543Z",
+      "updated_at": "2025-10-25T21:17:42.543Z"
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 14,
+    "fields": {
+      "name": "EufyCam 2C Pro",
+      "description": "Беспроводная камера с высоким разрешением и длительным временем работы батареи.",
+      "image": "",
+      "category": 3,
+      "price": 12999.0,
+      "created_at": "2025-10-25T21:17:42.543Z",
+      "updated_at": "2025-10-25T21:17:42.543Z"
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 15,
+    "fields": {
+      "name": "Lutron Caséta Wireless Smart Bridge",
+      "description": "Мост для управления умными осветительными устройствами и сценариями освещения.",
+      "image": "",
+      "category": 1,
+      "price": 11999.0,
+      "created_at": "2025-10-25T21:17:42.543Z",
+      "updated_at": "2025-10-25T21:17:42.543Z"
+    }
+  }
+]

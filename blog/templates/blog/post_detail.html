@@ -1,0 +1,40 @@
+<!-- product_detail.html -->
+{% extends 'catalog/base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block page_name %}
+    <h1>{{ post.title }}</h1>
+{% endblock %}
+
+{% block content %}
+
+  <div class="col">
+          <div class="card shadow-sm">
+              {% if post.image %}
+                    <img class="bd-placeholder-img card-img-top" width="100%" height="450" src="{{ post.image.url }}" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"/>
+              {% else %}
+                    <svg class="bd-placeholder-img card-img-top" width="100%" height="450" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
+              {% endif %}
+
+            <div class="card-body">
+
+                <h4>{{ post.title }}</h4>
+                <p class="card-text">{{ post.content }}</p>
+
+                <div class="d-flex flex-row-reverse bd-highlight">
+                    <small class="text-muted">{{ post.created_at|date:"d M Y" }}</small>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="btn-group">
+                        <a type="button" class="p-2 btn btn-sm btn-secondary" href="{% url 'blog:post_update' post.id %}">Редактировать</a>
+                        <a type="button" class="p-2 btn btn-sm btn-outline-danger" href="{% url 'blog:post_delete' post.id %}">Удалить</a>
+                    </div>
+                    <small class="text-muted">Просмотров: {{ post.views_counter }}</small>
+                </div>
+            </div>
+          </div>
+
+      </div><!-- /.col-lg-4 -->
+{% endblock %}
