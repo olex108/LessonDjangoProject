@@ -1,8 +1,13 @@
+import os
+
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Post
 from .forms import PostForm
+
+from src.mailing import send_email_100_views
 
 
 class PostsListView(ListView):
@@ -28,10 +33,14 @@ class PostDetailView(DetailView):
         self.object = super().get_object(queryset)
         self.object.views_counter += 1
         self.object.save()
+        # Send email if post get 100 views
+        if self.object.views_counter == 100:
+            send_email_100_views(os.getenv("EMAIL_ADDRESS"), self.object.title)
+
         return self.object
 
 
-class PostCreateView(CreateView):
+class PostCreateView(LoginRequiredMixin, CreateView):
     """CBV for create post view"""
 
     model = Post
@@ -43,7 +52,7 @@ class PostCreateView(CreateView):
         return reverse_lazy("blog:post_detail", kwargs={"pk": self.object.pk})
 
 
-class PostUpdateView(UpdateView):
+class PostUpdateView(LoginRequiredMixin, UpdateView):
     """CBV for update post view"""
 
     model = Post
@@ -55,7 +64,7 @@ class PostUpdateView(UpdateView):
         return reverse_lazy("blog:post_detail", kwargs={"pk": self.object.pk})
 
 
-class PostDeleteView(DeleteView):
+class PostDeleteView(LoginRequiredMixin, DeleteView):
     """CBV for delete post view"""
 
     model = Post
