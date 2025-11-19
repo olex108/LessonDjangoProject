@@ -27,6 +27,14 @@ HOST=host
 PORT=port
 ```
 
+For correct sending email add params to file `.env`
+
+```
+EMAIL_ADDRESS=e-mail_address
+APP_EMAIL_PASSWORD=app_e-mail_password
+```
+
+
 ## Description of Functionality
 
 ### CBV in view.py of catalog app
