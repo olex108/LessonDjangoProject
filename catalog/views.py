@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from catalog.models import Category, ClientMessage, Contacts, Product
 
@@ -42,7 +43,7 @@ class ProductDetailView(DetailView):
     context_object_name = "product"
 
 
-class ProductCreateView(CreateView):
+class ProductCreateView(LoginRequiredMixin, CreateView):
     """CBV for create product page with GET request"""
 
     model = Product
@@ -50,11 +51,11 @@ class ProductCreateView(CreateView):
     template_name = "catalog/product_form.html"
 
     def get_success_url(self):
-        # Используем reverse_lazy, чтобы получить URL с подставленным id
+        # use reverse_lazy, to get URL with add id(pk)
         return reverse_lazy("catalog:product_detail", kwargs={"pk": self.object.pk})
 
 
-class ProductUpdateView(UpdateView):
+class ProductUpdateView(LoginRequiredMixin, UpdateView):
     """CBV for update product page with GET request"""
 
     model = Product
@@ -66,7 +67,7 @@ class ProductUpdateView(UpdateView):
         return reverse_lazy("catalog:product_detail", kwargs={"pk": self.object.pk})
 
 
-class ProductDeleteView(DeleteView):
+class ProductDeleteView(LoginRequiredMixin, DeleteView):
     """CBV for delete product page with GET request"""
 
     model = Product

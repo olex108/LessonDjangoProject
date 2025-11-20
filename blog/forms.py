@@ -3,7 +3,7 @@ from django import forms
 from .models import Post
 from PIL import Image
 
-from src.valodators import validator_file_format, validator_file_size, validator_spam_words
+from src.validators import validator_file_format, validator_file_size, validator_spam_words
 
 
 class PostForm(forms.ModelForm):

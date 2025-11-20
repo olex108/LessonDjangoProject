@@ -1,0 +1,30 @@
+<!-- products_list.html -->
+{% extends 'base.html' %}
+
+{% block title %}Registration{% endblock %}
+
+{% block page_name %}
+    <h1>Регистрация</h1>
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="card mb-4 box-shadow">
+        <div class="card-header">
+            <h4 class="my-0 font-weight-normal">Форма регистрации</h4>
+        </div>
+        <div class="card-body">
+            <form id="myForm" method="post" action="" class="form-floating">
+                {% csrf_token %}
+                {{form.not_field_errors}}
+                {{ form.as_p }}
+                <div class="btn-group mt-4">
+                    <button type="submit" class="p-2 bd-highlight btn btn-sm btn-primary">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

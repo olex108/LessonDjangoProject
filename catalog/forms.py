@@ -3,7 +3,7 @@ from django import forms
 from catalog.models import Product
 from PIL import Image
 
-from src.valodators import validator_file_format, validator_file_size, validator_spam_words
+from src.validators import validator_file_format, validator_file_size, validator_spam_words
 
 
 class ProductForm(forms.ModelForm):
@@ -30,7 +30,6 @@ class ProductForm(forms.ModelForm):
             {
                 "class": "form-control",
                 "id": "formFile",
-                "required": "required",
             }
         )
         self.fields["category"].widget.attrs.update(
