@@ -1,13 +1,23 @@
 import secrets
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView
 
 from src.mailing import send_welcome_email
 
-from .forms import UserRegistrationForm
+from .forms import UserRegistrationForm, UserUpdateForm
 from .models import User
+
+
+class UserUpdateView(LoginRequiredMixin, UpdateView):
+    form_class = UserUpdateForm
+    template_name = "users/user_update_form.html"
+    success_url = reverse_lazy("users:user_update")
+
+    def get_object(self, queryset=None):
+        return self.request.user
 
 
 class UserRegistrationView(CreateView):

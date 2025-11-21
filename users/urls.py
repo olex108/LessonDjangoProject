@@ -15,4 +15,5 @@ urlpatterns = [
     ),
     path("logout/", LogoutView.as_view(next_page="catalog:home"), name="logout"),
     path("users/email_confirm/<str:token>/", views.email_verification, name="email_confirm"),
+    path("users/user_update/", views.UserUpdateView.as_view(), name="user_update"),
 ]

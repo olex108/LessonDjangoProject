@@ -32,6 +32,9 @@
                         </form>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="{% url 'users:user_update'%}">Профиль</a>
+                    </li>
+                    <li class="nav-item">
                       <a class="nav-link" href="#" target="_blank" rel="noopener">
                           {% if user.avatar %}
                             <img class="bd-placeholder-img rounded-circle" width="36" height="36" src="{{ user.avatar.url }}"/>

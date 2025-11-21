@@ -1,7 +1,53 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.forms import ModelForm
 
 from .models import User
+
+
+class UserUpdateForm(ModelForm):
+    class Meta:
+        model = User
+        fields = ["email", "first_name", "last_name", "phone", "country", "avatar"]
+
+    def __init__(self, *args, **kwargs):
+        super(UserUpdateForm, self).__init__(*args, **kwargs)
+        self.fields["email"].widget.attrs.update(
+            {
+                "class": "form-control",
+                "placeholder": "example@example.com",
+            }
+        )
+        self.fields["first_name"].widget.attrs.update(
+            {
+                "class": "form-control",
+                "placeholder": "Имя",
+            }
+        )
+        self.fields["last_name"].widget.attrs.update(
+            {
+                "class": "form-control",
+                "placeholder": "Фамилия",
+            }
+        )
+        self.fields["country"].widget.attrs.update(
+            {
+                "class": "form-control",
+                "placeholder": "Название страны",
+            }
+        )
+        self.fields["country"].help_text = ""
+        self.fields["phone"].widget.attrs.update(
+            {
+                "class": "form-control",
+                "placeholder": "+77777777777",
+            }
+        )
+        self.fields["avatar"].widget.attrs.update(
+            {
+                "class": "form-control",
+            }
+        )
 
 
 class UserRegistrationForm(UserCreationForm):
