@@ -1,4 +1,5 @@
 from django.test import TestCase
+
 from users.forms import UserRegistrationForm
 
 
@@ -11,7 +12,7 @@ class TestUserRegistrationForm(TestCase):
             "password2": "pluhrdvb123",
             "country": "Russia",
             "phone": "+77777777777",
-            "avatar": ""
+            "avatar": "",
         }
         form = UserRegistrationForm(data=form_data)
         self.assertTrue(form.is_valid())
@@ -23,10 +24,10 @@ class TestUserRegistrationForm(TestCase):
             "password2": "pluhrdvb123",
             "country": "Russia",
             "phone": "+77777777777",
-            "avatar": ""
+            "avatar": "",
         }
         form = UserRegistrationForm(data=form_data)
-        self.assertEqual(form.errors["email"], ['Enter a valid email address.'])
+        self.assertEqual(form.errors["email"], ["Enter a valid email address."])
 
     def test_invalid_password(self):
         form_data = {
@@ -35,10 +36,10 @@ class TestUserRegistrationForm(TestCase):
             "password2": "password123",
             "country": "Russia",
             "phone": "+77777777777",
-            "avatar": ""
+            "avatar": "",
         }
         form = UserRegistrationForm(data=form_data)
-        self.assertEqual(form.errors["password2"], ['This password is too common.'])
+        self.assertEqual(form.errors["password2"], ["This password is too common."])
 
     def test_invalid_phone(self):
         form_data = {
@@ -47,7 +48,7 @@ class TestUserRegistrationForm(TestCase):
             "password2": "pluhrdvb123",
             "country": "",
             "phone": "77777777777",
-            "avatar": ""
+            "avatar": "",
         }
         form = UserRegistrationForm(data=form_data)
-        self.assertEqual(form.errors["phone"], ['Enter a valid phone number (e.g. +12125552368).'])
+        self.assertEqual(form.errors["phone"], ["Enter a valid phone number (e.g. +12125552368)."])
