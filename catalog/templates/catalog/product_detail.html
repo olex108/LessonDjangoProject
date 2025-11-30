@@ -9,6 +9,12 @@
 
 {% block content %}
 
+  {% if 'catalog.can_unpublish_product' in perms %}
+    <div class="container mb-3">
+            <button id="publish-toggle-btn" class="btn btn-{% if product.is_publication == True %}danger{% else %}primary{% endif %}" type="submit">{% if product.is_publication == True %}Отменить публикацию{% else %}Опубликовать{% endif %}</button>
+    </div>
+  {% endif %}
+
   <div class="col-8">
     <ol class="list-group list-group-numbered">
       <li class="list-group-item d-flex justify-content-between align-items-start">
@@ -16,7 +22,7 @@
           <div class="fw-bold">Название</div>
           {{ product.name }}
         </div>
-        <span class="badge bg-primary rounded-pill">ТОП</span>
+        <span id="publish-toggle-span" class="badge bg-{% if product.is_publication %}primary{% else %}danger{% endif %} rounded-pill">{% if product.is_publication %}Публикуется{% else %}Не публикуется{% endif %}</span>
       </li>
       <li class="list-group-item d-flex justify-content-between align-items-start">
         <div class="ms-2 me-auto">
@@ -51,8 +57,10 @@
       </li>
     </ol>
     <div class="btn-group mt-4">
-      {% if user.is_authenticated %}
+      {% if user == product.owner %}
         <a type="button" class="p-2 bd-highlight btn btn-sm btn-secondary" href="{% url 'catalog:product_update' product.id %}">Редактировать</a>
+      {% endif %}
+      {% if 'catalog.delete_product' in perms or user == product.owner %}
         <a type="button" class="p-2 bd-highlight btn btn-sm btn-outline-danger" href="{% url 'catalog:product_delete' product.id %}">Удалить</a>
       {% endif %}
     </div>
@@ -73,5 +81,65 @@
              class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto">
     {% endif %}
   </div>
-</div>
+
+<script>
+  // Получение CSRF токена из cookies
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i=0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.startsWith(name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+  const csrftoken = getCookie('csrftoken');
+  const btn = document.getElementById('publish-toggle-btn');
+  const badge = document.getElementById('publish-toggle-span')
+
+  btn.addEventListener('click', function() {
+    if (confirm('Подтвердить изменение публикации?')) {
+      fetch('', {  // Текущий URL, можно оставить пустым
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': csrftoken,
+          'Content-Type': 'application/json'
+        },
+        credentials: 'same-origin'
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === 'success') {
+          alert(data.message);
+
+          // Обновляем кнопку и её текст в зависимости от нового статуса
+          if (data.new_state === true) {
+            btn.className = 'btn btn-danger';
+            btn.textContent = 'Отменить публикацию';
+            badge.className = 'badge bg-primary';
+            badge.textContent = 'Публикуется';
+          } else {
+            btn.className = 'btn btn-primary';
+            btn.textContent = 'Опубликовать';
+            badge.className = 'badge bg-danger';
+            badge.textContent = 'Не публикуется';
+          }
+        } else {
+          alert('Ошибка: ' + data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Ошибка:', error);
+        alert('Произошла ошибка. Попробуйте позже.');
+      });
+    }
+  });
+</script>
+
 {% endblock %}
