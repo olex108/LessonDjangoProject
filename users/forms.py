@@ -68,7 +68,6 @@ class UserRegistrationForm(UserCreationForm):
                 "class": "form-control",
                 "label": "Пароль:",
                 "placeholder": "Введите пароль",
-
             }
         )
         self.fields["password1"].label = "Пароль"

@@ -1,6 +1,7 @@
 import secrets
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import Group
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView
@@ -32,6 +33,7 @@ class UserRegistrationView(CreateView):
 
         user = form.save()
         user.is_active = False
+        user.user_permissions.clear()
         # create email verification of user
         token = secrets.token_hex(16)
         user.token = token
@@ -49,9 +51,19 @@ class UserRegistrationView(CreateView):
 
 
 def email_verification(request, token):
-    """View function change param of field is_active of user if token by request is equal token in database"""
+    """
+    View function change param of field is_active and app user into user_group of user
+    if token by request is equal token in database
+    """
 
     user = get_object_or_404(User, token=token)
     user.is_active = True
+
+    try:
+        user_group = Group.objects.get(name="Пользователь")
+        user.groups.add(user_group)
+    except Exception as e:
+        print(e)
+
     user.save()
     return redirect(reverse("users:login"))
