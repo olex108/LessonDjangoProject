@@ -10,6 +10,13 @@ from catalog.models import Category, ClientMessage, Contacts, Product
 
 from .forms import ProductForm
 
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
+from django.core.cache import cache
+from django.utils.cache import get_cache_key
+
+from .services import CatalogServices
+
 
 class HomeView(ListView):
     """CBV for render home page with pagination of products"""
@@ -31,9 +38,17 @@ class ProductsListView(ListView):
     context_object_name = "products"
 
     def get_queryset(self):
-        return Product.objects.all().order_by("-created_at")
+        queryset = cache.get('products_list_queryset')
+        if queryset is None:
+            queryset = super().get_queryset()
+            cache.set('products_list_queryset', queryset, 60*15)
+
+        return queryset
+
+        # return Product.objects.all().order_by("-created_at")
 
 
+@method_decorator(cache_page(60 * 60), name='dispatch')
 class ProductDetailView(DetailView):
     """CBV for render product detail page with GET request"""
 
@@ -85,6 +100,8 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
         """Add user id to Product field owner"""
 
         form.instance.owner = self.request.user
+        # Delete from cache
+        cache.delete('products_list_queryset')
 
         return super().form_valid(form)
 
@@ -120,6 +137,11 @@ class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         user = self.request.user
         product = self.get_object()
+        is_has_perm = product.owner == self.request.user or user.has_perm("catalog.delete_product")
+        # Delete from cache
+        if is_has_perm:
+            cache.delete('products_list_queryset')
+
         return product.owner == self.request.user or user.has_perm("catalog.delete_product")
 
     def handle_no_permission(self):
@@ -132,6 +154,27 @@ class CategoriesListView(ListView):
     model = Category
     template_name = "catalog/categories_list.html"
     context_object_name = "categories"
+
+
+class CategoryProductsListView(ListView):
+    """CBV for render all products list from database with GET request"""
+
+    model = Product
+    template_name = "catalog/category_products_list.html"
+    context_object_name = "products"
+
+    def get_queryset(self):
+        category_id = self.kwargs["pk"]
+        queryset = CatalogServices.get_category_products_list(category_id)
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["category"] = Category.objects.get(id=self.kwargs["pk"])
+
+        return context
+
 
 
 class ContactsView(CreateView):
