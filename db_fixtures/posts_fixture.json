@@ -8,7 +8,9 @@
       "image": "",
       "created_at": "2025-10-25T21:17:42.543Z",
       "is_published": false,
-      "views_counter": 0
+      "views_counter": 0,
+      "publish_status": "DRAFT",
+      "author": 1
     }
   },
   {
@@ -20,7 +22,9 @@
       "image": "",
       "created_at": "2025-10-25T21:18:10.123Z",
       "is_published": false,
-      "views_counter": 0
+      "views_counter": 0,
+      "publish_status": "SUBMIT",
+      "author": 1
     }
   },
   {
@@ -32,7 +36,9 @@
       "image": "",
       "created_at": "2025-10-25T21:18:50.678Z",
       "is_published": false,
-      "views_counter": 0
+      "views_counter": 0,
+      "publish_status": "DRAFT",
+      "author": 1
     }
   },
   {
@@ -43,8 +49,10 @@
       "content": "В современном умном доме системы видеонаблюдения позволяют контролировать территорию в реальном времени через смартфон или планшет. Камеры оснащены ночным режимом, детекцией движения и возможностью записи. Такие системы обеспечивают безопасность, позволяют быстро реагировать на возможные угрозы и управлять домашней безопасностью из любого места.",
       "image": "",
       "created_at": "2025-10-25T21:19:20.234Z",
-      "is_published": false,
-      "views_counter": 0
+      "is_published": true,
+      "views_counter": 0,
+      "publish_status": "PUBLISH",
+      "author": 1
     }
   },
   {
@@ -56,7 +64,9 @@
       "image": "",
       "created_at": "2025-10-25T21:19:55.789Z",
       "is_published": false,
-      "views_counter": 0
+      "views_counter": 0,
+      "publish_status": "SUBMIT",
+      "author": 2
     }
   },
   {
@@ -68,7 +78,9 @@
       "image": "",
       "created_at": "2025-10-25T21:20:25.456Z",
       "is_published": false,
-      "views_counter": 0
+      "views_counter": 0,
+      "publish_status": "DRAFT",
+      "author": 2
     }
   },
   {
@@ -80,7 +92,9 @@
       "image": "",
       "created_at": "2025-10-25T21:20:55.123Z",
       "is_published": false,
-      "views_counter": 0
+      "views_counter": 0,
+      "publish_status": "SUBMIT",
+      "author": 2
     }
   },
   {
@@ -91,8 +105,10 @@
       "content": "Такие системы постоянно мониторят качество воздуха в доме, включая уровень пыльцы, аллергенов и вредных веществ. При необходимости они автоматически включаются, очищая воздух и создавая здоровую атмосферу. Это особенно важно для аллергиков и тех, кто заботится о здоровье своей семьи.",
       "image": "",
       "created_at": "2025-10-25T21:21:20.789Z",
-      "is_published": false,
-      "views_counter": 0
+      "is_published": true,
+      "views_counter": 0,
+      "publish_status": "PUBLISH",
+      "author": 2
     }
   },
   {
@@ -104,7 +120,9 @@
       "image": "",
       "created_at": "2025-10-25T21:21:55.456Z",
       "is_published": false,
-      "views_counter": 0
+      "views_counter": 0,
+      "publish_status": "SUBMIT",
+      "author": 3
     }
   },
   {
@@ -115,8 +133,10 @@
       "content": "Все устройства умного дома объединены в облачное решение, что позволяет управлять ими через единую платформу. Такой подход обеспечивает быстрый доступ к настройкам, обновлениям и мониторингу системы из любой точки мира. Это делает управление домом простым, гибким и максимально удобным для пользователя.",
       "image": "",
       "created_at": "2025-10-25T21:22:20.123Z",
-      "is_published": false,
-      "views_counter": 0
+      "is_published": true,
+      "views_counter": 0,
+      "publish_status": "PUBLISH",
+      "author": 3
     }
   }
 ]

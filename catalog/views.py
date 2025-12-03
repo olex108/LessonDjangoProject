@@ -1,11 +1,10 @@
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ObjectDoesNotExist
-
-from django.http import JsonResponse
-
+from django.http import HttpResponseForbidden, JsonResponse
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, ListView
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
 from catalog.models import Category, ClientMessage, Contacts, Product
 
@@ -42,6 +41,35 @@ class ProductDetailView(DetailView):
     template_name = "catalog/product_detail.html"
     context_object_name = "product"
 
+    def get_context_data(self, **kwargs):
+        """Add user to context data"""
+
+        context = super().get_context_data(**kwargs)
+        context["user"] = self.request.user
+        return context
+
+    def post(self, request, *args, **kwargs):
+        """
+        POST method for product detail page with GET request from script in template
+        If user has permission product publication boolean field change by opposite and save result
+        Method return JSON Response with message
+        """
+
+        user = request.user
+        if not user.has_perm("catalog.can_unpublish_product"):
+            return HttpResponseForbidden("У вас нет права отменять публикацию продукта")
+
+        else:
+            self.object = self.get_object()
+            product = self.object
+
+            product.is_publication = not product.is_publication
+            product.save()
+
+            status_message = "Продукт снят из публикации" if not product.is_publication else "Продукт опубликован"
+
+            return JsonResponse({"status": "success", "message": status_message, "new_state": product.is_publication})
+
 
 class ProductCreateView(LoginRequiredMixin, CreateView):
     """CBV for create product page with GET request"""
@@ -51,28 +79,51 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
     template_name = "catalog/product_form.html"
 
     def get_success_url(self):
-        # use reverse_lazy, to get URL with add id(pk)
         return reverse_lazy("catalog:product_detail", kwargs={"pk": self.object.pk})
 
+    def form_valid(self, form):
+        """Add user id to Product field owner"""
 
-class ProductUpdateView(LoginRequiredMixin, UpdateView):
-    """CBV for update product page with GET request"""
+        form.instance.owner = self.request.user
+
+        return super().form_valid(form)
+
+
+class ProductUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    """
+    CBV for update product page with GET request
+    Have test function to compare user and product owner
+    """
 
     model = Product
     form_class = ProductForm
     template_name = "catalog/product_form.html"
 
     def get_success_url(self):
-        # Используем reverse_lazy, чтобы получить URL с подставленным id
         return reverse_lazy("catalog:product_detail", kwargs={"pk": self.object.pk})
 
+    def test_func(self):
+        product = self.get_object()
+        return product.owner == self.request.user
 
-class ProductDeleteView(LoginRequiredMixin, DeleteView):
+    def handle_no_permission(self):
+        return redirect("catalog:product_detail", pk=self.kwargs["pk"])
+
+
+class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     """CBV for delete product page with GET request"""
 
     model = Product
     template_name = "catalog/product_confirm_delete.html"
     success_url = reverse_lazy("catalog:products_list")
+
+    def test_func(self):
+        user = self.request.user
+        product = self.get_object()
+        return product.owner == self.request.user or user.has_perm("catalog.delete_product")
+
+    def handle_no_permission(self):
+        return redirect("catalog:product_detail", pk=self.kwargs["pk"])
 
 
 class CategoriesListView(ListView):
