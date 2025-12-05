@@ -1,7 +1,8 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseForbidden, JsonResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
@@ -9,6 +10,7 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from catalog.models import Category, ClientMessage, Contacts, Product
 
 from .forms import ProductForm
+from .services import CatalogCacheServices, CatalogServices
 
 
 class HomeView(ListView):
@@ -31,7 +33,7 @@ class ProductsListView(ListView):
     context_object_name = "products"
 
     def get_queryset(self):
-        return Product.objects.all().order_by("-created_at")
+        return CatalogCacheServices.get_products_list_from_cache()
 
 
 class ProductDetailView(DetailView):
@@ -41,24 +43,54 @@ class ProductDetailView(DetailView):
     template_name = "catalog/product_detail.html"
     context_object_name = "product"
 
-    def get_context_data(self, **kwargs):
-        """Add user to context data"""
+    def dispatch(self, request, *args, **kwargs):
+        """
+        Update method to cache page HTML response
+        To correct cache for different users (user, owner, moderator, moderator&owner) page can be cached with
+        different cache keys
+        """
 
+        self.cache_key = f"product_detail:{kwargs['pk']}"
+
+        if request.method == "GET":
+
+            if self.request.user.is_authenticated:
+                # If user is_authenticated, chek "can_unpublish_product" permissions and add ":moderator" to cache key
+                if self.request.user.has_perm("catalog.can_unpublish_product"):
+                    self.cache_key += ":moderator"
+                # Try to get cached_response with user id in "cache_key" and if it exists add :owner:# to cache key
+                if self.request.user.id == self.get_object().owner.id:
+                    self.cache_key += f":owner:{self.request.user.id}"
+
+            cached_response = cache.get(self.cache_key)
+
+            if cached_response:
+                return cached_response
+
+        response = super().dispatch(request, *args, **kwargs)
+
+        if request.method == "GET" and response.status_code == 200:
+
+            try:
+                # Render response before set cache
+                response.render()
+                cache.set(self.cache_key, response, 60 * 3)
+                print(f"[{self.cache_key}] Сохранено в кэш")
+            except Exception as e:
+                print(f"Ошибка при кэшировании: {e}")
+
+        return response
+
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["user"] = self.request.user
+
         return context
 
     def post(self, request, *args, **kwargs):
-        """
-        POST method for product detail page with GET request from script in template
-        If user has permission product publication boolean field change by opposite and save result
-        Method return JSON Response with message
-        """
-
         user = request.user
         if not user.has_perm("catalog.can_unpublish_product"):
             return HttpResponseForbidden("У вас нет права отменять публикацию продукта")
-
         else:
             self.object = self.get_object()
             product = self.object
@@ -67,6 +99,16 @@ class ProductDetailView(DetailView):
             product.save()
 
             status_message = "Продукт снят из публикации" if not product.is_publication else "Продукт опубликован"
+
+            # Delete caches of product page after change with POST
+            for cache_key in [
+                f"product_detail:{kwargs['pk']}",
+                f"product_detail:{kwargs['pk']}:owner:{self.object.owner.id}",
+                f"product_detail:{kwargs['pk']}:moderator",
+                f"product_detail:{kwargs['pk']}:moderator:owner:{self.object.owner.id}",
+            ]:
+                cache.delete(cache_key)
+                print(f"[{cache_key}] Удален из кэша после POST запроса")
 
             return JsonResponse({"status": "success", "message": status_message, "new_state": product.is_publication})
 
@@ -85,6 +127,8 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
         """Add user id to Product field owner"""
 
         form.instance.owner = self.request.user
+        # Delete from cache
+        cache.delete("products_list_queryset")
 
         return super().form_valid(form)
 
@@ -98,6 +142,24 @@ class ProductUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Product
     form_class = ProductForm
     template_name = "catalog/product_form.html"
+
+    def form_valid(self, form):
+        """Update method to delete page cache"""
+
+        response = super().form_valid(form)
+        product_id = self.object.pk
+
+        # Delete caches of product page after change with POST
+        for cache_key in [
+            f"product_detail:{product_id}",
+            f"product_detail:{product_id}:owner:{self.object.owner.id}",
+            f"product_detail:{product_id}:moderator",
+            f"product_detail:{product_id}:moderator:owner:{self.object.owner.id}",
+        ]:
+            cache.delete(cache_key)
+            print(f"[{cache_key}] Удален из кэша после POST запроса")
+
+        return response
 
     def get_success_url(self):
         return reverse_lazy("catalog:product_detail", kwargs={"pk": self.object.pk})
@@ -120,7 +182,12 @@ class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         user = self.request.user
         product = self.get_object()
-        return product.owner == self.request.user or user.has_perm("catalog.delete_product")
+        is_has_perm = product.owner == self.request.user or user.has_perm("catalog.delete_product")
+        # Delete from cache
+        if is_has_perm:
+            cache.delete("products_list_queryset")
+
+        return is_has_perm
 
     def handle_no_permission(self):
         return redirect("catalog:product_detail", pk=self.kwargs["pk"])
@@ -132,6 +199,23 @@ class CategoriesListView(ListView):
     model = Category
     template_name = "catalog/categories_list.html"
     context_object_name = "categories"
+
+
+class CategoryProductsListView(ListView):
+    """CBV for render all products list from database with GET request"""
+
+    model = Product
+    template_name = "catalog/category_products_list.html"
+    context_object_name = "products"
+
+    def get_queryset(self):
+        return CatalogServices.get_category_products_list(self.kwargs["pk"])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["category"] = Category.objects.get(id=self.kwargs["pk"])
+
+        return context
 
 
 class ContactsView(CreateView):
