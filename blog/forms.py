@@ -1,17 +1,26 @@
 from django import forms
-
-from .models import Post
 from PIL import Image
 
 from src.validators import validator_file_format, validator_file_size, validator_spam_words
 
+from .models import Post
+
 
 class PostForm(forms.ModelForm):
+    """
+    Form for post model
+
+    !!! Add publish_status field
+    """
+
     class Meta:
         model = Post
-        exclude = ["created_at", "views_counter"]
+        exclude = ["created_at", "views_counter", "is_published", "author"]
 
     def __init__(self, *args, **kwargs):
+        # Get and del user from form kwargs
+        self.user = kwargs.pop("user", None)
+
         super(PostForm, self).__init__(*args, **kwargs)
         self.fields["title"].widget.attrs.update(
             {
@@ -30,14 +39,18 @@ class PostForm(forms.ModelForm):
             {
                 "class": "form-control",
                 "id": "formFile",
-                "required": "required",
+                # "required": "required",
             }
         )
-        self.fields["is_published"].widget.attrs.update(
-            {
-                "class": "form-check-input",
-            }
+        self.fields["publish_status"].widget.attrs.update(
+            {"class": "form-select form-select-lg mb-3", "aria-label": "Default select example"}
         )
+
+        if not self.user.has_perm("blog.can_publish_post"):
+            # If user don`t has permission to publish post fild "Publish" will be deleted from choises
+            current_choices = list(self.fields["publish_status"].choices)
+            filtered_choices = [choice for choice in current_choices if choice[0] != "PUBLISH"]
+            self.fields["publish_status"].choices = filtered_choices
 
     def clean_title(self):
         title = self.cleaned_data.get("title")

@@ -1,18 +1,22 @@
 from django import forms
-
-from catalog.models import Product
 from PIL import Image
 
+from catalog.models import Product
 from src.validators import validator_file_format, validator_file_size, validator_spam_words
 
 
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        exclude = ["created_at", "updated_at"]
+        exclude = ["created_at", "updated_at", "owner"]
 
     def __init__(self, *args, **kwargs):
+
         super(ProductForm, self).__init__(*args, **kwargs)
+
+        self.fields["is_publication"].widget.attrs.update(
+            {"class": "form-select", "aria-label": "Disabled select example", "disabled": "disabled"}
+        )
         self.fields["name"].widget.attrs.update(
             {
                 "class": "form-control",
@@ -33,7 +37,10 @@ class ProductForm(forms.ModelForm):
             }
         )
         self.fields["category"].widget.attrs.update(
-            {"class": "form-select", "size": "3", "aria-label": "size 3 select example"}
+            {
+                "class": "form-select",
+                "aria-label": "Disabled select example",
+            }
         )
         self.fields["price"].widget.attrs.update(
             {
@@ -45,6 +52,13 @@ class ProductForm(forms.ModelForm):
                 "class": "form-check-input",
             }
         )
+        # self.fields["owner"].widget.attrs.update(
+        #     {
+        #         "class": "form-select",
+        #         "aria-label": "Disabled select example",
+        #         'disabled': 'disabled'
+        #     }
+        # )
 
     def clean_name(self):
         name = self.cleaned_data.get("name")

@@ -1,15 +1,12 @@
 from django.test import TestCase
+
 from blog.forms import PostForm
+
 
 class PostFormTest(TestCase):
     def test_form_valid_post(self):
 
-        form_data = {
-            "title": "Test title",
-            "content": "Test content",
-            "is_published": True,
-            "image": None
-        }
+        form_data = {"title": "Test title", "content": "Test content", "is_published": True, "image": None}
         form = PostForm(data=form_data)
         self.assertTrue(form.is_valid())
 
@@ -22,7 +19,7 @@ class PostFormTest(TestCase):
         }
         form = PostForm(data=form_data)
         self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors["title"], ['This field is required.'])
+        self.assertEqual(form.errors["title"], ["This field is required."])
 
     def test_form_spam_words(self):
 
@@ -33,5 +30,4 @@ class PostFormTest(TestCase):
         }
         form = PostForm(data=form_data)
         self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors["title"], ['Содержит спам слово - казино'])
-
+        self.assertEqual(form.errors["title"], ["Содержит спам слово - казино"])

@@ -1,5 +1,6 @@
-from django.test import TestCase, Client
+from django.test import Client, TestCase
 from django.urls import reverse
+
 from blog.models import Post
 from users.models import User
 
@@ -27,7 +28,6 @@ class PostCreateViewTest(TestCase):
 
         self.assertRedirects(response, expected_redirect_url)
 
-
     def test_authenticated_user(self):
 
         # Create client
@@ -37,7 +37,7 @@ class PostCreateViewTest(TestCase):
         response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'blog/post_form.html')
+        self.assertTemplateUsed(response, "blog/post_form.html")
 
         # Test post response
 
@@ -55,7 +55,7 @@ class PostCreateViewTest(TestCase):
 
         self.assertTrue(self.post)
 
-        self.assertRedirects(response, reverse('blog:post_detail', kwargs={"pk": self.post.id}))
+        self.assertRedirects(response, reverse("blog:post_detail", kwargs={"pk": self.post.id}))
 
     def test_authenticated_user_spam(self):
         """Test view wint spam title. Post wasn't saved in DB."""
@@ -69,4 +69,3 @@ class PostCreateViewTest(TestCase):
         response = self.client.post(self.url, form_data, follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertFalse(Post.objects.filter(title="казино").exists())
-
